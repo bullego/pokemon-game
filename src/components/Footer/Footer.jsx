@@ -4,8 +4,8 @@ const Footer = () => {
 	return (
 		<footer>
 			<div className={stl.wrapper}>
-					<h3>THANKS FOR VISITING</h3>
-					<p>© 2021 #ReactMarathon.</p>
+				<h3>THANKS FOR VISITING</h3>
+				<p>© 2021 #ReactMarathon.</p>
 			</div>
 		</footer>
 	)

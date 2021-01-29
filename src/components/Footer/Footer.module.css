@@ -22,10 +22,10 @@ footer .wrapper {
 
 @media only screen and (max-width: 649px) {
 	footer .wrapper {
-			flex-direction: column;
+		flex-direction: column;
 	}
 
 	footer .wrapper h3 {
-			padding-bottom: .8rem;
+		padding-bottom: .8rem;
 	}
 }

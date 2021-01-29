@@ -22,11 +22,11 @@
 
 @keyframes stars-move-in {
 	from {
-			background-position-y: -100px;
+		background-position-y: -100px;
 	}
 	to {
-			opacity: 1;
-			background-position-y: 0;
+		opacity: 1;
+		background-position-y: 0;
 	}
 }
 
@@ -45,11 +45,11 @@
 
 @keyframes forest-move-in {
 	from {
-			background-position-y: 150%;
+		background-position-y: 150%;
 	}
 	to {
-			opacity: 1;
-			background-position-y: 100%;
+		opacity: 1;
+		background-position-y: 100%;
 	}
 }
 
@@ -66,11 +66,11 @@
 
 @keyframes text-fade-in {
 	from {
-			right: 0;
+		right: 0;
 	}
 	to {
-			opacity: 1;
-			right: 25%;
+		opacity: 1;
+		right: 25%;
 	}
 }
 
