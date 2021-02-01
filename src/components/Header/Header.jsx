@@ -1,12 +1,12 @@
 import stl from './Header.module.css';
 
-const Header = (props) => {
+const Header = ({title, desc}) => {
 	return (
-		<header className={stl.root}>
+ 		<header className={stl.root}>
 			<div className={stl.forest}></div>
 			<div className={stl.container}>
-				<h1>This is title</h1>
-				<p>This is Description!</p>
+				<h1>{title}</h1>
+				<p>{desc}</p>
 			</div>
 		</header>
 	)
