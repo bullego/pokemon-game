@@ -1,0 +1,27 @@
+.about_page {
+	padding-bottom: 40px;
+}
+
+.about_page p {
+	margin-bottom: 30px;
+	font-size: 24px;
+	color: black;
+}
+
+.about_page button {
+	padding: 12px 32px;
+	background-color: transparent;
+	border-radius: 4px;
+	border: 1px solid #000000;
+	color: #000000;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.about_page button:hover,
+.about_page button:active,
+.about_page button:focus {
+	background-color: #000000;
+	color: #ffffff;
+	outline: none;
+}

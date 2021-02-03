@@ -3,18 +3,21 @@ import Navbar from './Navbar';
 import Menu from './Menu';
 import stl from './MenuHeader.module.css';
 
-const MenuHeader = () => {
-	const [isOpenMenu, setIsOpenMenu] = useState(false);
-
-	const onToggleMenu = (isOpen) => {
-		setIsOpenMenu(isOpen)
+const MenuHeader = ({bgActive}) => {
+	const [isOpenMenu, setIsOpenMenu] = useState(null); // !!null === false  !null === true
+	
+	const onToggleMenu = () => {
+		setIsOpenMenu(prevState => !prevState)
 	}
 
 	return (
 		<div className={stl.menuHeader}>
-			<Menu isOpenMenu={isOpenMenu}/>
+			<Menu isOpenMenu={isOpenMenu}
+						onToggleMenu={onToggleMenu}/>
+
 			<Navbar isOpenMenu={isOpenMenu}
-							onToggleMenu={onToggleMenu}/>
+							onToggleMenu={onToggleMenu}
+							bgActive={bgActive}/>
 		</div>
 	)
 }
