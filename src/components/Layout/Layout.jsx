@@ -1,4 +1,5 @@
 import stl from './Layout.module.css';
+import classnames from 'classnames';
 
 const Layout = ({id, title, urlBg, colorBg, colorTitle, children}) => {
 	const styleBg = urlBg 
@@ -16,7 +17,7 @@ const Layout = ({id, title, urlBg, colorBg, colorTitle, children}) => {
 						<h3 style={styleTitle}>{title}</h3>
 						<span className={stl.separator}></span>
 					</div>
-					<div className={stl.desc + ' ' + stl.full}>
+					<div className={classnames(stl.desc, stl.full)}>
 						{children}
 					</div>
 				</article>

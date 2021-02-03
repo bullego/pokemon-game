@@ -83,8 +83,27 @@
 }
 
 .container p {
+	margin-bottom: 30px;
 	font-size: 28px;
 	font-weight: normal;
 	color: #fafafa;
 	line-height: 32px;
+}
+
+.container button {
+	padding: 12px 32px;
+	background-color: transparent;
+	border-radius: 4px;
+	border: 1px solid rgb(118, 223, 226);
+	color: rgb(118, 223, 226);
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.container button:hover,
+.container button:active,
+.container button:focus {
+	background-color: rgb(118, 223, 226);
+	color: rgb(37, 41, 52);
+	outline: none;
 }
