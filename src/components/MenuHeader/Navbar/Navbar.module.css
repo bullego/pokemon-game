@@ -5,11 +5,12 @@
   padding: 0.7rem;
   display: flex;
   justify-content: center;
-  background: #181d23aa;
+  /* background: #181d23aa; */
+  background-color: rgba(0,0,0,0.2);
 }
 
 #navbar.bgActive {
-  background: #181d23;
+  background: #03338dcb;
 }
 
 #navbar .navWrapper {
@@ -26,7 +27,7 @@
   align-items: center;
   font-size: 1.6rem;
   color: #fafafa;
-  cursor: default;
+  cursor: pointer;
 }
 #navbar .brand img {
   width: 40px;
@@ -88,7 +89,7 @@
 }
 
 @media only screen and (max-width: 849px) {
-  #navbar {
+  /* #navbar {
     background: #181d23aa;
-  }
+  } */
 }

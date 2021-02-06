@@ -1,33 +1,49 @@
+import {Link} from 'react-router-dom';
 import stl from './Menu.module.css';
 import classnames from 'classnames';
 
-const Menu = ({isOpenMenu}) => {
+const MENU = [
+	{
+		title: 'HOME',
+		href: '/'
+	},
+	{
+		title: 'GAME',
+		href: '/game'
+	},
+	{
+		title: 'ABOUT',
+		href: '/about'
+	},
+	{
+		title: 'CONTACT',
+		href: '/contact'
+	}
+]
+
+const Menu = ({isOpenMenu, onToggleMenu}) => {
+	const handleClick = () => {
+		onToggleMenu(!isOpenMenu)
+	}
+
 	return (
-		<div className={classnames(stl.menuContainer, {[stl.active]: isOpenMenu,
-																									 [stl.deactive]: !isOpenMenu})}>
+		<div className={classnames(stl.menuContainer, {[stl.active]: isOpenMenu === true,
+																									 [stl.deactive]: isOpenMenu === false})}>
 			<div className={stl.overlay}/>
 			<div className={stl.menuItems}>
 				<ul>
-					<li>
-						<a href="#welcome">
-							HOME
-						</a>
-					</li>
-					<li>
-						<a href="#game">
-							GAME
-						</a>
-					</li>
-					<li>
-						<a href="#about">
-							ABOUT
-						</a>
-					</li>
-					<li>
-						<a href="#contact">
-							CONTACT
-						</a>
-					</li>
+				{	
+					MENU.map(item => {
+						return (
+							<li key={item.title}
+									onClick={handleClick}>
+								<Link to={item.href}>
+									{item.title}
+								</Link>
+							</li>
+						)
+					})
+				}
 				</ul>
 			</div>
 		</div>

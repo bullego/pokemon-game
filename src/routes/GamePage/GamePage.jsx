@@ -1,18 +1,192 @@
+import {useState} from 'react';
+import Layout from '../../components/Layout';
+import PokemonCard from '../../components/PokemonCard';
 import stl from './GamePage.module.css';
+import layoutBg from '../../assets/bg3.jpg';
 
-const GamePage = ({onChangePage}) => {
-	const handleClick = () => {
-		onChangePage && onChangePage('app')
+let pokemonsData = [
+  {
+    "abilities": [
+      "keen-eye",
+      "tangled-feet",
+      "big-pecks"
+    ],
+    "stats": {
+      "hp": 63,
+      "attack": 60,
+      "defense": 55,
+      "special-attack": 50,
+      "special-defense": 50,
+      "speed": 71
+    },
+    "type": "flying",
+    "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png",
+    "name": "pidgeotto",
+    "base_experience": 122,
+    "height": 11,
+    "id": 17,
+    "values": {
+      "top": "A",
+      "right": 2,
+      "bottom": 7,
+      "left": 5
+    }
+  },
+  {
+    "abilities": [
+      "intimidate",
+      "shed-skin",
+      "unnerve"
+    ],
+    "stats": {
+      "hp": 60,
+      "attack": 95,
+      "defense": 69,
+      "special-attack": 65,
+      "special-defense": 79,
+      "speed": 80
+    },
+    "type": "poison",
+    "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/24.png",
+    "name": "arbok",
+    "base_experience": 157,
+    "height": 35,
+    "id": 24,
+    "values": {
+      "top": 5,
+      "right": 9,
+      "bottom": "A",
+      "left": "A"
+    }
+  },
+  {
+    "abilities": [
+      "static",
+      "lightning-rod"
+    ],
+    "stats": {
+      "hp": 35,
+      "attack": 55,
+      "defense": 40,
+      "special-attack": 50,
+      "special-defense": 50,
+      "speed": 90
+    },
+    "type": "electric",
+    "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+    "name": "pikachu",
+    "base_experience": 112,
+    "height": 4,
+    "id": 25,
+    "values": {
+      "top": 8,
+      "right": "A",
+      "bottom": 9,
+      "left": 6
+    }
+  },
+  {
+    "abilities": [
+      "overgrow",
+      "chlorophyll"
+    ],
+    "stats": {
+      "hp": 45,
+      "attack": 49,
+      "defense": 49,
+      "special-attack": 65,
+      "special-defense": 65,
+      "speed": 45
+    },
+    "type": "grass",
+    "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    "name": "bulbasaur",
+    "base_experience": 64,
+    "height": 7,
+    "id": 1,
+    "values": {
+      "top": 8,
+      "right": 4,
+      "bottom": 2,
+      "left": 7
+    }
+  },
+  {
+    "abilities": [
+      "blaze",
+      "solar-power"
+    ],
+    "stats": {
+      "hp": 39,
+      "attack": 52,
+      "defense": 43,
+      "special-attack": 60,
+      "special-defense": 50,
+      "speed": 65
+    },
+    "type": "fire",
+    "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
+    "name": "charmander",
+    "base_experience": 62,
+    "height": 6,
+    "id": 4,
+    "values": {
+      "top": 7,
+      "right": 6,
+      "bottom": 1,
+      "left": 4
+    }
+  }
+]
+
+const GamePage = () => {
+	const [pokemons, setPokemons] = useState(pokemonsData);
+
+	const setActivePropToPokemon = (currPokemon) => {
+		let isActive = true;
+
+		if(currPokemon.active) {
+			isActive = false
+		}
+					
+		const index = pokemons.findIndex(pok => pok.id === currPokemon.id);
+		const updatedPokemon = {
+			...currPokemon,
+			'active': isActive
+		}
+
+		const newPokemons = [
+			...pokemons.slice(0, index),
+			updatedPokemon,
+			...pokemons.slice(index+1)		
+		];
+		
+		setPokemons(newPokemons);
+	}
+
+	const onCardClick = (id) => {
+		const currPokemon = pokemons.find(pokemon => pokemon.id === id);	
+		setActivePropToPokemon(currPokemon);
 	}
 
 	return (
-		<div className={stl.gamepage}>
-			<p>Hello from Game Page</p>
+			<Layout id='cards'
+							title='Cards'
+							colorTitle='#252934'
+							urlBg={layoutBg}>
 
-			<button onClick={handleClick}>
-				Back to homepage
-			</button>
-		</div>
+				<div className={stl.flex}>
+					{ pokemons.map(item => <PokemonCard key={item.id}
+																							name={item.name} 
+																							img={item.img}
+																							id={item.id}
+																							type={item.type}
+																							values={item.values}
+																							isActiveCard={item.active}
+																							onCardClick={onCardClick}/>)
+					}
+				</div>
+			</Layout>
 	)
 }
 

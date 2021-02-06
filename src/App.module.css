@@ -37,9 +37,18 @@
   }
 }
 
-.flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+.page_not_found {
+  margin-top: 2rem;
+  font-size: 2rem;
+  text-align: center;
+  color: tomato;
+}
+
+.page_wrap {
+  min-height: calc(100vh - 100px);
+  padding: 96px 0px 24px 0px;
+}
+
+.page_wrap.isHomePage {
+  padding: 0;
 }
