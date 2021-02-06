@@ -142,31 +142,10 @@ let pokemonsData = [
 const GamePage = () => {
 	const [pokemons, setPokemons] = useState(pokemonsData);
 
-	const setActivePropToPokemon = (currPokemon) => {
-		let isActive = true;
+	const onCardClick = (id) => {    
+    const newPokemons = pokemons.map(pok => pok.id === id ? ({...pok, active: !pok.active}) : pok)
 
-		if(currPokemon.active) {
-			isActive = false
-		}
-					
-		const index = pokemons.findIndex(pok => pok.id === currPokemon.id);
-		const updatedPokemon = {
-			...currPokemon,
-			'active': isActive
-		}
-
-		const newPokemons = [
-			...pokemons.slice(0, index),
-			updatedPokemon,
-			...pokemons.slice(index+1)		
-		];
-		
-		setPokemons(newPokemons);
-	}
-
-	const onCardClick = (id) => {
-		const currPokemon = pokemons.find(pokemon => pokemon.id === id);	
-		setActivePropToPokemon(currPokemon);
+    setPokemons(newPokemons);
 	}
 
 	return (
