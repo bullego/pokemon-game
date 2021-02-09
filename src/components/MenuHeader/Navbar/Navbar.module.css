@@ -11,6 +11,7 @@
 
 #navbar.bgActive {
   background: #03338dcb;
+  /* background-color: #000; */
 }
 
 #navbar .navWrapper {
