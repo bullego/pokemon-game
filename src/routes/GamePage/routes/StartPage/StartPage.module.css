@@ -5,7 +5,7 @@
 .flex {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: space-around;
 	align-items: center;
 }
 
@@ -39,9 +39,8 @@
 }
 
 .cardSize {
-	width: 20vw;
+	width: 100%;
 	max-width: 256px;
-	height: 28vw;
-	max-height: 360px;
-	margin: 10px;
+	height: 360px;
+	margin: 20px 10px;
 }

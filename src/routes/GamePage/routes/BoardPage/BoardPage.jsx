@@ -5,11 +5,12 @@ import stl from './BoardPage.module.css';
 
 const BoardPage = () => {
 	const pokContext = useContext(PokemonContext);
+	// console.log('pokContext BoardPage: ', pokContext);
 
 	return (
 		<div className={stl.root}>
 			<div className={stl.playerOne}>
-				{ pokContext.poks.map(pok => {
+				{ pokContext.selectedPoks.map(pok => {
 						return (
 							<PokemonCard key={pok.id}
 													 name={pok.name} 

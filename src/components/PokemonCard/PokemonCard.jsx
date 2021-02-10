@@ -4,10 +4,12 @@ import classnames from 'classnames';
 const PokemonCard = ({name, img, id, type, values,
 											isActiveCard, isSelectedCard, onCardClick,
 											minimize, className}) => {
+	const handleClick = () => {
+		onCardClick && onCardClick(id)
+	}
+				
 	return (
-		// <div className={stl.root}
-		//  		 onClick={() => onCardClick(id)}>
-		<div onClick={() => onCardClick(id)}
+		<div onClick={handleClick}
 				 className={classnames(className, stl.pokemonCard, {
 															 [stl.active]: isActiveCard,
 															 [stl.selected]: isSelectedCard})}>
@@ -40,7 +42,6 @@ const PokemonCard = ({name, img, id, type, values,
 				<div className={classnames(stl.wrap, stl.back)} />
 			</div>
 		</div>
-		// </div>
 	)
 }
 

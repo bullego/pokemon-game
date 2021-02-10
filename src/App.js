@@ -1,4 +1,4 @@
-import {useRouteMatch, Route, Switch, Redirect} from 'react-router-dom';
+import {useLocation, Route, Switch, Redirect} from 'react-router-dom';
 import MenuHeader from './components/MenuHeader';
 import Footer from './components/Footer';
 import HomePage from './routes/HomePage';
@@ -11,7 +11,9 @@ import stl from './App.module.css';
 
 
 const App = () => {
-	const match = useRouteMatch('/');
+	const location = useLocation();
+	const isPadding = location.pathname === '/' || location.pathname === '/game/board';
+	//console.log('location: ', location);
 
   return (		
 		<Switch>
@@ -19,9 +21,9 @@ const App = () => {
 			
 			<Route>
 				<>
-					<MenuHeader bgActive={!match.isExact}/>
+					<MenuHeader bgActive={!isPadding}/>
 
-					<div className={classnames(stl.page_wrap, {[stl.isHomePage]: match.isExact})}>
+					<div className={classnames(stl.page_wrap, {[stl.isHomePage]: isPadding})}>
 						<Switch>
 							<Route path='/' exact component={HomePage}/>
 							<Route path='/game' component={GamePage}/>
