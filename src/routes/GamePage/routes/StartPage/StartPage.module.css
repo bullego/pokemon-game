@@ -1,0 +1,47 @@
+.start_page {
+	color: black;
+}
+
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
+
+.add_btn,
+.start_btn {
+	margin-top: 10px;
+	margin-bottom: 30px;
+	padding: 12px 24px;
+	background-color: transparent;
+	border-radius: 6px;
+	border: 1px solid #03338dcb;
+	color: #03338dcb;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.add_btn:hover,
+.start_btn:hover,
+.add_btn:focus,
+.start_btn:focus,
+.add_btn:active,
+.start_btn:active {
+	background-color: #03338dcb;
+	color: #fff;
+}
+
+.cardSize {
+	width: 20vw;
+	max-width: 256px;
+	height: 28vw;
+	max-height: 360px;
+	margin: 10px;
+}

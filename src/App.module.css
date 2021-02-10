@@ -46,7 +46,7 @@
 
 .page_wrap {
   min-height: calc(100vh - 100px);
-  padding: 96px 0px 24px 0px;
+  padding: 71px 0px 24px 0px;
 }
 
 .page_wrap.isHomePage {
