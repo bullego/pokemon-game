@@ -15,12 +15,16 @@ const StartPage = () => {
 	// console.log('pokContext StartPage: ', pokContext);
 
 	useEffect(() => {
+		(pokContext.selectedPoks.length > 0) && pokContext.clearSelectedPoksFromContext();
+		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
+		pokContext.setIsWinner(false);
+		
 		database.ref('pokemons').once('value', (snapshot) => {
 			setPokemons(snapshot.val())
-		})
+		});		
 	}, []);
 
-
+	
 	const onCardClick = (id) => {
 		let objID = null;
 
@@ -64,10 +68,10 @@ const StartPage = () => {
 									disabled={pokContext.selectedPoks.length < 5}>
 						Start Game
 					</button>
-					<button className={stl.start_btn}
+					{/* <button className={stl.finish_btn}
 									onClick={finishGameBtn}>
 						Finish Game
-					</button>
+					</button> */}
 				</div>
 
 				<div className={stl.flex}>

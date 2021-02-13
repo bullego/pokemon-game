@@ -29,3 +29,8 @@ footer .wrapper {
 		padding-bottom: .8rem;
 	}
 }
+
+.toggle_footer {
+	display: none;
+	opacity: 0;
+}

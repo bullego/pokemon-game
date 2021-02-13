@@ -3,7 +3,7 @@ import classnames from 'classnames';
 
 const PokemonCard = ({name, img, id, type, values,
 											isActiveCard, isSelectedCard, onCardClick,
-											minimize, className}) => {
+											minimize, className, possession}) => {
 	const handleClick = () => {
 		onCardClick && onCardClick(id)
 	}
@@ -15,7 +15,7 @@ const PokemonCard = ({name, img, id, type, values,
 															 [stl.selected]: isSelectedCard})}>
 			<div className={stl.cardFront}>
 				<div className={classnames(stl.wrap, stl.front)}>
-					<div className={classnames(stl.pokemon, stl[type])}>
+					<div className={classnames(stl.pokemon, stl[type], stl[possession])}>
 						<div className={stl.values}>
 							<div className={classnames(stl.count, stl.top)}>{values.top}</div>
 							<div className={classnames(stl.count, stl.right)}>{values.right}</div>

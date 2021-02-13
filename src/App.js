@@ -12,8 +12,11 @@ import stl from './App.module.css';
 
 const App = () => {
 	const location = useLocation();
-	const isPadding = location.pathname === '/' || location.pathname === '/game/board';
-	//console.log('location: ', location);
+	const isPadding = location.pathname === '/'	||
+									  location.pathname === '/game/board'	|| 
+										location.pathname === '/game/finish';
+	const isToggleFooter = location.pathname === '/game/board' || 
+												 location.pathname === '/game/finish';
 
   return (		
 		<Switch>
@@ -33,7 +36,7 @@ const App = () => {
 						</Switch>
 					</div>
 
-					<Footer/>
+					<Footer isFooter={isToggleFooter}/>
 				</>
 			</Route>			
 		</Switch>

@@ -1,0 +1,15 @@
+.board_card {
+	width: 100%;
+	max-width: 18vw;
+	height: 14.8vw;
+	margin-top: -7vw;
+	/* border: 1px solid red; */
+}
+
+.board_card:first-child {
+	margin-top: 0;
+}
+
+.board_card.selected {
+	margin-left: -20px;
+}
