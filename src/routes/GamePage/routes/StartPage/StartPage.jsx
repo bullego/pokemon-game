@@ -70,7 +70,7 @@ const StartPage = () => {
 					</button>
 					{/* <button className={stl.finish_btn}
 									onClick={finishGameBtn}>
-						Finish Game
+						FinishGame
 					</button> */}
 				</div>
 
