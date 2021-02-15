@@ -13,26 +13,31 @@ const StartPage = () => {
 	const pokContext = useContext(PokemonContext);
 	const [pokemons, setPokemons] = useState({});
 	// console.log('pokContext StartPage: ', pokContext);
+	console.log('1)pokemons: ', pokemons);
 
 	useEffect(() => {
+		//reset Context at first render
 		(pokContext.selectedPoks.length > 0) && pokContext.clearSelectedPoksFromContext();
 		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
 		pokContext.setIsWinner(false);
 		
+		//get poks from database and set to the STATE
 		database.ref('pokemons').once('value', (snapshot) => {
-			setPokemons(snapshot.val())
+			console.log('2)pokemons: ', snapshot.val());
+			setPokemons(snapshot.val());
 		});		
 	}, []);
 
 	
 	const onCardClick = (id) => {
-		let objID = null;
+		//add new property 'isSelectedCard' to the selected pokemon(object)
+		let objKey = null;
 
 		const updatedPokemons = Object.entries(pokemons).reduce((acc, item) => {
 			const pokemon = {...item[1]};
 			
 			if (pokemon.id === id) {
-				objID =	item[0];
+				objKey =	item[0];
 				pokemon.isSelectedCard = !pokemon.isSelectedCard;
 			};
 			
@@ -41,19 +46,18 @@ const StartPage = () => {
 			return acc;
 		}, {});
 
+		//refresh pokemons(object) with new selected pokemon
 		setPokemons(updatedPokemons);
 
-		if (objID) {
-			const updatedPokemon = updatedPokemons[objID];
+		if (objKey) {
+			//add to the Context(array) all selected pokemons
+			const updatedPokemon = updatedPokemons[objKey];
 			pokContext.addSelectedPokemon(updatedPokemon)
 		}
 	}
 
 	const startGameBtn = () => {
 		history.push('/game/board');
-	}
-	const finishGameBtn = () => {
-		history.push('/game/finish');
 	}
 	
 	return (
@@ -68,10 +72,6 @@ const StartPage = () => {
 									disabled={pokContext.selectedPoks.length < 5}>
 						Start Game
 					</button>
-					{/* <button className={stl.finish_btn}
-									onClick={finishGameBtn}>
-						FinishGame
-					</button> */}
 				</div>
 
 				<div className={stl.flex}>
@@ -97,3 +97,14 @@ const StartPage = () => {
 }
 
 export default StartPage;
+
+/*
+1) Загрузка страницы -> очистка контекста PokContext для возможности выбрать новых покемонов + сбор с сервера покемонов и запись их в обьект pokemons в STATE (useEffect -> database -> setPokemons( snapshot.val()) ) для дальнейшей отрисовки на экране через компонент <PokemonCard/>. pokemons - это обьект с набором пар ("ключ"(странная строка): "значение"(обьект покемона))
+
+2) Выбор игровой пятерки. Нужно отметить 5 покемонов, которыми будем сражаться. Клик на покемона - добавление его в игровую пятерку, повторный клик - удалеине из пятерки. При клике мы выбираем покемона и добавляем ему новое св-во isSelectedCard и присваиваем ему true. Т.о. имеем "старый-новый" набор покемонов (updatedPokemons), одному из которых добавлена информация о том, что он был отмечен юзером.
+Также, покемона, которого выбрал юзер, мы помещаем и в Контекст PokContext (массив выбранных покемонов selectedPoks) через метод addSelectedPokemon(updatedPokemon) для дальнейшего использования выбранных покемонов в других Компонентах.
+
+Перед игрой можно выбрать максимум 5 покемонов. За эти следит проверка pokContext.selectedPoks.length < 5 || value.isSelectedCard
+
+3) Нажатие на кнопку "Start Game" через обьект "history" хука useHistory() перекинет нас c 5-кой покемонов на игровое поле 'Board Page'. Кнопка "Start Game" активируется только после выбора 5 покемонов.
+*/

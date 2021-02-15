@@ -16,12 +16,12 @@ const GamePage = () => {
 	const clearSelectedPoksFromContext = () => {
 		setSelectedPoks([])
 	}
-
 	const clearOpponentPoksFromContext = () => {
 		setOpponentPoks([])
 	}
 
 	const addSelectedPokemon = (newSelectedPok) => {
+		//selected/unselected pokemon
 		if(selectedPoks.find(pok => pok.id === newSelectedPok.id)) {			
 			const index = selectedPoks.findIndex(pok => pok.id === newSelectedPok.id);
 			
@@ -74,3 +74,7 @@ const GamePage = () => {
 };
 
 export default GamePage;
+
+/*
+Страница GamePage отрисовует три компоненты в зависимости от URL-а (StartPage, BoardPage, FinishPage) либо 404-ю если URL не найден. Для передачи параметров используем понятие Контекста (PokContext) в Провайдер которого передаем нужные для отрисовуемых компонент данные. 
+*/
