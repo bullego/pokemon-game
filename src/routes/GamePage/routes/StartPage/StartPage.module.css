@@ -16,7 +16,6 @@
 	width: 100%;
 }
 
-.finish_btn,
 .start_btn {
 	margin: 10px;
 	margin-bottom: 30px;
@@ -29,21 +28,10 @@
 	cursor: pointer;
 }
 
-.finish_btn {
-	border: 1px solid tomato;
-	color: tomato;
-}
-
 .start_btn:hover,
 .start_btn:focus,
 .start_btn:active {
 	background-color: #03338dcb;
-	color: #fff;
-}
-.finish_btn:hover,
-.finish_btn:focus,
-.finish_btn:active {
-	background-color: tomato;
 	color: #fff;
 }
 
