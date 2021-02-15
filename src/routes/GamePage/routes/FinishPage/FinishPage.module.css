@@ -1,7 +1,60 @@
 .finish_page {
-	color: black;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	/* height: calc(100vw/1.56); */
+	height: 100vh;
+	padding: 0 2vw;
+	padding-top: 60px;
+	background-color: #000;
+	background: url('../../../../assets/bg3.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	/* border: 2px solid blue; */
 }
 
-.finish_page h2 {
-	text-align: center;
+.player1_pokemons, 
+.player2_pokemons {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	/* border: 2px solid red; */
+}
+
+.player1_pokemon,
+.player2_pokemon {
+	width: 20%;
+	height: 220px;
+	margin: 0 1vw;
+	/* border: 2px solid green; */
+}
+.player1_pokemon:first-child,
+.player2_pokemon:first-child {
+	margin-left: 0;
+}
+.player1_pokemon:last-child,
+.player2_pokemon:last-child {
+	margin-right: 0;
+}
+
+.btn_endgame_wrap {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+.btn_endgame {
+	padding: 12px 20px;
+	background-color: tomato;
+	text-transform: uppercase;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer; 
+}
+.btn_endgame:hover,
+.btn_endgame:active,
+.btn_endgame:focus {
+	background-color: rgb(235, 80, 52);
 }

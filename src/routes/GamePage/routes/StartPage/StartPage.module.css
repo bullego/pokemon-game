@@ -16,9 +16,9 @@
 	width: 100%;
 }
 
-.add_btn,
+.finish_btn,
 .start_btn {
-	margin-top: 10px;
+	margin: 10px;
 	margin-bottom: 30px;
 	padding: 12px 24px;
 	background-color: transparent;
@@ -28,13 +28,22 @@
 	text-transform: uppercase;
 	cursor: pointer;
 }
-.add_btn:hover,
+
+.finish_btn {
+	border: 1px solid tomato;
+	color: tomato;
+}
+
 .start_btn:hover,
-.add_btn:focus,
 .start_btn:focus,
-.add_btn:active,
 .start_btn:active {
 	background-color: #03338dcb;
+	color: #fff;
+}
+.finish_btn:hover,
+.finish_btn:focus,
+.finish_btn:active {
+	background-color: tomato;
 	color: #fff;
 }
 
