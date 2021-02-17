@@ -13,7 +13,6 @@ const StartPage = () => {
 	const pokContext = useContext(PokemonContext);
 	const [pokemons, setPokemons] = useState({});
 	// console.log('pokContext StartPage: ', pokContext);
-	console.log('1)pokemons: ', pokemons);
 
 	useEffect(() => {
 		//reset Context at first render
@@ -23,7 +22,6 @@ const StartPage = () => {
 		
 		//get poks from database and set to the STATE
 		database.ref('pokemons').once('value', (snapshot) => {
-			console.log('2)pokemons: ', snapshot.val());
 			setPokemons(snapshot.val());
 		});		
 	}, []);

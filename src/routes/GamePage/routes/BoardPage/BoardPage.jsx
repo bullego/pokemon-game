@@ -3,6 +3,8 @@ import {useHistory} from 'react-router-dom';
 import {PokemonContext} from '../../../../context/pokemonContext';
 import PokemonCard from '../../../../components/PokemonCard';
 import PlayerBoard from './component/PlayerBoard';
+import Result from './component/Result';
+import ArrowChoice from './component/ArrowChoice';
 import stl from './BoardPage.module.css';
 
 
@@ -27,6 +29,9 @@ const counterWinCards = (boardWithCards, player1, player2) => {
 const BoardPage = () => {
 	const history = useHistory();
 	const pokContext = useContext(PokemonContext);
+	
+	const [randomPlayerNumber, setRandomPlayerNumber] = useState(null);
+	// console.log('first step for player №', randomPlayerNumber);
 
 	const [board, setBoard] = useState([]);
 	const [player1, setPlayer1] = useState(() => {
@@ -39,27 +44,27 @@ const BoardPage = () => {
 	const [player2, setPlayer2] = useState([]);
 	const [chosenCard, setChosenCard] = useState(null);
 	const [playerSteps, setPlayerSteps] = useState(0);
+	const [winType, setWinType] = useState(null);
+	const [showArrow, setShowArrow] = useState(true);
 
 
 	if(pokContext.selectedPoks.length === 0) {
 		history.replace('/game');
 	}
 
-
-	useEffect(async () => {
-		//refresh opponent pokemons (remove them from Context)
-		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
-
+	const fetchAndSetBoard = async () => {
 		//get board from backend and set to the STATE
 		const boardResponse = await fetch(`${baseUrl}/board`);
 		const boardRequest = await boardResponse.json();
 
 		setBoard(boardRequest.data);
+	}
 
+	const fetchAndSetPlayer2 = async () => {
 		//get opponent pokemons from backend and set to the Context and STATE
 		const player2Response = await fetch(`${baseUrl}/create-player`);
 		const player2Request = await player2Response.json();
-		
+
 		if(pokContext.opponentPoks.length < 6) {
 			pokContext.addOpponentPokemon(player2Request.data);
 		}
@@ -67,9 +72,21 @@ const BoardPage = () => {
 		setPlayer2(() => {
 			return player2Request.data.map(pok => ({
 				...pok,
-				possession: 'red'
+				possession: 'red',
 			}))
 		});
+	}
+
+	useEffect(() => {
+		//refresh opponent pokemons (remove them from Context)
+		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
+
+		//set first random player step
+		let random = (Math.random()<.5)+1
+		setTimeout(() => setRandomPlayerNumber(random), 3000)
+
+		fetchAndSetBoard();
+		fetchAndSetPlayer2();
 	}, [])
 
 	
@@ -78,17 +95,18 @@ const BoardPage = () => {
 			const [player1Count, player2Count] = counterWinCards(board, player1, player2);
 
 			if(player1Count > player2Count) {
-				alert('WIN');
+				setWinType('win');
 				pokContext.setIsWinner(true);
-				history.push('/game/finish');
+				setTimeout(() => history.push('/game/finish'), 2000)
 			} 
 			else if(player1Count < player2Count) {
-				alert('LOSE');
-				history.push('/game/finish');
+				setWinType('lose');
+				// history.push('/game/finish');
+				setTimeout(() => history.push('/game/finish'), 2000)
 			} 
 			else {
-				alert('DRAW');
-				history.push('/game/finish');
+				setWinType('draw');
+				setTimeout(() => history.push('/game/finish'), 2000)
 			}
 		}
 	}, [playerSteps])
@@ -128,15 +146,21 @@ const BoardPage = () => {
 				const count = prevState + 1
 				return count
 			})
+
+			setShowArrow(false);
 		}
 	}
-
+	
 
 	return (
 		<div className={stl.root}>
+			{showArrow ? <ArrowChoice side={randomPlayerNumber}/> : null}
+
 			<div className={stl.playerOne}>
 				<PlayerBoard cards={player1}
 										 playerNumber={1}
+										 playerSteps={playerSteps}
+										 randomPlayerNumber={randomPlayerNumber}
 										 onChosenCard={(card) => setChosenCard(card)}/>
 			</div>
 
@@ -155,8 +179,12 @@ const BoardPage = () => {
 			<div className={stl.playerTwo}>
 				<PlayerBoard cards={player2}
 										 playerNumber={2}
+										 playerSteps={playerSteps}
+										 randomPlayerNumber={randomPlayerNumber}
 										 onChosenCard={(card) => setChosenCard(card)}/>
 			</div>
+			
+			{playerSteps === 9 ? <Result type={winType}/> : null}
 		</div>
 	);
 };
@@ -213,4 +241,15 @@ setBoard(response).
 В созданном useEffect-е который зависит от кол-ва шагов будем забирать player1Count и player2Count и сравнивая их определять победителя.
 
 После любого результата игры, мы должны попасть на страницу Finish Game через history.push('/game/finish'), а в случае победы еще и записать в Контекст что есть победитель: pokContext.setIsWinner(true), чтоб использовать это состояние в Finish Page
+
+--------------------
+
+Рандомный выбор первого хода (при загрузке определяем кто ходит первый) реализуем через (Math.random()<.5)+1 который будет отдавать рандомно 1 или 2. Эти цифры (или 1 или 2) получаем при первой отрисовке в useEffect-е и будем записывать их в состояние randomPlayerNumber. Цифры нужны для передачи их в комопнент <PlayerBoard randomPlayerNumber={randomPlayerNumber} .../> для использования в условиях возможности/невозможности первого хода того или иного игрока: 
+
+	if(playerNumber === randomPlayerNumber && (playerSteps%2 === 0)) {...} ходит 1-й игрок
+	if(playerNumber === (randomPlayerNumber === 1 ? 2 : 1) && (playerSteps%2 !== 0)) {...} ходит 2-й
+
+В этих двух условиях также реализован запрет повторного хода (т.е. нельзя выбрать после сделанного хода еще раз покемона и положить его на игровое поле)
+
+Также подключаем два новых Компонента вывода результата игры <Result/> и спинера для выбора игрока который сделает первый ход <ArrowChoice/>
 */
