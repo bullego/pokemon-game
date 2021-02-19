@@ -1,14 +1,18 @@
 import {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {PokemonContext} from '../../../../context/pokemonContext';
+// import {PokemonContext} from '../../../../context/pokemonContext';
 import PokemonCard from '../../../../components/PokemonCard';
 import PlayerBoard from './component/PlayerBoard';
 import Result from './component/Result';
 import ArrowChoice from './component/ArrowChoice';
 import stl from './BoardPage.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import {setIsWinnerPlayerAC,
+				clearOpponentPoksAC,
+				getOpponentPoksTC,
+				getBoardTC,
+				combineCardWithBoardTC} from '../../../../redux/pokemon-reducer';
 
-
-const baseUrl = 'https://reactmarathon-api.netlify.app/api';
 
 const counterWinCards = (boardWithCards, player1, player2) => {
 	let player1Count = player1.length;
@@ -28,14 +32,16 @@ const counterWinCards = (boardWithCards, player1, player2) => {
 
 const BoardPage = () => {
 	const history = useHistory();
-	const pokContext = useContext(PokemonContext);
+	const dispatch = useDispatch();
+	const {selectedPoks,
+				 opponentPokemonData,
+				 boardData,
+				 combineBoardData} = useSelector(state => state.pokemons);
 	
 	const [randomPlayerNumber, setRandomPlayerNumber] = useState(null);
-	// console.log('first step for player №', randomPlayerNumber);
-
 	const [board, setBoard] = useState([]);
 	const [player1, setPlayer1] = useState(() => {
-		return pokContext.selectedPoks.map(pok => ({
+		return selectedPoks.map(pok => ({
 			...pok,
 			possession: 'blue',
 			isSelectedCard: false //for fixed styles
@@ -47,72 +53,57 @@ const BoardPage = () => {
 	const [winType, setWinType] = useState(null);
 	const [showArrow, setShowArrow] = useState(true);
 
+	console.log('TEST board: ', board);
+	console.log('TEST boardData: ', boardData);
+	console.log('TEST combineBoardData: ', combineBoardData);
 
-	if(pokContext.selectedPoks.length === 0) {
+	if(selectedPoks.length === 0) {
 		history.replace('/game');
-	}
-
-	const fetchAndSetBoard = async () => {
-		//get board from backend and set to the STATE
-		const boardResponse = await fetch(`${baseUrl}/board`);
-		const boardRequest = await boardResponse.json();
-
-		setBoard(boardRequest.data);
-	}
-
-	const fetchAndSetPlayer2 = async () => {
-		//get opponent pokemons from backend and set to the Context and STATE
-		const player2Response = await fetch(`${baseUrl}/create-player`);
-		const player2Request = await player2Response.json();
-
-		if(pokContext.opponentPoks.length < 6) {
-			pokContext.addOpponentPokemon(player2Request.data);
-		}
-		
-		setPlayer2(() => {
-			return player2Request.data.map(pok => ({
-				...pok,
-				possession: 'red',
-			}))
-		});
 	}
 
 	useEffect(() => {
 		//refresh opponent pokemons (remove them from Context)
-		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
+		opponentPokemonData && (opponentPokemonData.length > 0) && dispatch(clearOpponentPoksAC());
 
 		//set first random player step
 		let random = (Math.random()<.5)+1
-		setTimeout(() => setRandomPlayerNumber(random), 3000)
+		setTimeout(() => setRandomPlayerNumber(random), 3000);
 
-		fetchAndSetBoard();
-		fetchAndSetPlayer2();
+		dispatch(getBoardTC());
+		setBoard(boardData);
+
+		dispatch(getOpponentPoksTC());
+		setPlayer2(() => {
+			return opponentPokemonData.map(pok => ({
+				...pok,
+				possession: 'red',
+			}))
+		});
 	}, [])
 
 	
-	useEffect(() => {
-		if(playerSteps === 9) {
-			const [player1Count, player2Count] = counterWinCards(board, player1, player2);
+	// useEffect(() => {
+	// 	if(playerSteps === 9) {
+	// 		const [player1Count, player2Count] = counterWinCards(board, player1, player2);
 
-			if(player1Count > player2Count) {
-				setWinType('win');
-				pokContext.setIsWinner(true);
-				setTimeout(() => history.push('/game/finish'), 2000)
-			} 
-			else if(player1Count < player2Count) {
-				setWinType('lose');
-				// history.push('/game/finish');
-				setTimeout(() => history.push('/game/finish'), 2000)
-			} 
-			else {
-				setWinType('draw');
-				setTimeout(() => history.push('/game/finish'), 2000)
-			}
-		}
-	}, [playerSteps])
+	// 		if(player1Count > player2Count) {
+	// 			setWinType('win');
+	// 			dispatch(setIsWinnerPlayerAC(true));
+	// 			setTimeout(() => history.push('/game/finish'), 2000)
+	// 		} 
+	// 		else if(player1Count < player2Count) {
+	// 			setWinType('lose');
+	// 			setTimeout(() => history.push('/game/finish'), 2000)
+	// 		} 
+	// 		else {
+	// 			setWinType('draw');
+	// 			setTimeout(() => history.push('/game/finish'), 2000)
+	// 		}
+	// 	}
+	// }, [playerSteps])
 
 
-	const handleClickSquare = async (squarePosition) => {
+	const handleClickSquare = (squarePosition) => {
 		//match selected card with empty square using backend
 		if(chosenCard) {
 			const params = {
@@ -120,17 +111,9 @@ const BoardPage = () => {
 				card: chosenCard,
 				board
 			}
-
-			const res = await fetch(`${baseUrl}/players-turn`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(params)
-			});
-
-			const matchCardToBoard = await res.json();
 			
+			dispatch(combineCardWithBoardTC(params));
+
 			//refresh STATE (remove card from player1 or player2) after match card with board
 			if(chosenCard.playerNumber === 1) {
 				setPlayer1(prevState => prevState.filter(card => card.id !== chosenCard.id));
@@ -139,7 +122,7 @@ const BoardPage = () => {
 				setPlayer2(prevState => prevState.filter(card => card.id !== chosenCard.id));
 			}
 
-			setBoard(matchCardToBoard.data);
+			setBoard(combineBoardData);
 
 			//count player steps to win/lose/draw
 			setPlayerSteps(prevState => {
