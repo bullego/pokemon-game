@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { PokemonContext } from '../../../../context/pokemonContext';
 import PokemonCard from '../../../../components/PokemonCard';
 import database from '../../../../service/firebase';
@@ -8,7 +8,6 @@ import stl from './FinishPage.module.css';
 
 const FinishPage = () => {
 	const history = useHistory();
-	const pokContext = useContext(PokemonContext);
 	const {selectedPoks, opponentPokemonData, isWinner} = useSelector(state => state.pokemons);
 	const[selectedOpponentPok, setSelectedOpponentPok] = useState(null);
 
@@ -22,10 +21,6 @@ const FinishPage = () => {
 		//protected route
 		history.push('/game');
 	}
-	// if((pokContext.selectedPoks.length === 0) || (pokContext.opponentPoks.length === 0)) {
-	// 	//protected route
-	// 	history.push('/game');
-	// }
 
 	const onEndGameHandler = () => {
 		//add to gatabase new pokemon 
@@ -90,15 +85,3 @@ const FinishPage = () => {
 };
 
 export default FinishPage;
-
-/*
-На финальной странице игры отрисовуются карточки покемонов друг напротив друга, и если есть победитель по результату игры, то можно забрать одного покемона из колоды опонента, кликнув по нему один раз. Клик на желаемого покемона записывает его в STATE и потом оттуда он достается при записи в database перевого игрока, если он победил. Запись в БД происходит при условии что есть победитель и после нажатия кнопки END GAME. После добавления в БД нового покемона игра заканчивается полностью и нас через history.push('/game') перебрасывает на старт новой игры.
-
-Также на странице реализован запрет перехода на нее по прямому URL-у через выполнение условий:
-
-	if((pokContext.selectedPoks.length === 0) || (pokContext.opponentPoks.length === 0)) {
-		history.push('/game');
-	}
-
-т.о. мы не можем попасть на страницу Finish Page вбив вручную в URL адрес '.../game/finish', а только после получения результата игры (win/lose/draw) на странице Board Page.
-*/
