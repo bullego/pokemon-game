@@ -5,25 +5,39 @@ import PokemonCard from '../../../../components/PokemonCard';
 import stl from './StartPage.module.css';
 import layoutBg from '../../../../assets/bg3.jpg';
 import database from '../../../../service/firebase';
-import { PokemonContext } from '../../../../context/pokemonContext';
+// import { PokemonContext } from '../../../../context/pokemonContext';
+import { useDispatch, useSelector } from 'react-redux';
+import {setPokemonsAC,
+			 	setSelectedPokAC,
+				removeUnselectedPokAC,
+				clearSelectedPoksAC,
+				clearOpponentPoksAC} from '../../../../redux/pokemon-reducer';
 
 
 const StartPage = () => {
 	const history = useHistory();
-	const pokContext = useContext(PokemonContext);
-	const [pokemons, setPokemons] = useState({});
+	// const pokContext = useContext(PokemonContext);
+	// const [pokemons, setPokemons] = useState({});
 	// console.log('pokContext StartPage: ', pokContext);
+
+	const {pokemonData, selectedPoks, opponentPokemonData} = useSelector(state => state.pokemons)
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		//reset Context at first render
-		(pokContext.selectedPoks.length > 0) && pokContext.clearSelectedPoksFromContext();
-		(pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
-		pokContext.setIsWinner(false);
+		(selectedPoks.length > 0) && dispatch(clearSelectedPoksAC());
+		opponentPokemonData && (opponentPokemonData.length > 0) && dispatch(clearOpponentPoksAC());
+		// (pokContext.selectedPoks.length > 0) && pokContext.clearSelectedPoksFromContext();
+		// (pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
+		// pokContext.setIsWinner(false);
 		
 		//get poks from database and set to the STATE
 		database.ref('pokemons').once('value', (snapshot) => {
-			setPokemons(snapshot.val());
-		});		
+			dispatch(setPokemonsAC(snapshot.val()));
+		});
+		// database.ref('pokemons').once('value', (snapshot) => {
+		// 	setPokemons(snapshot.val());
+		// });		
 	}, []);
 
 	
@@ -31,7 +45,7 @@ const StartPage = () => {
 		//add new property 'isSelectedCard' to the selected pokemon(object)
 		let objKey = null;
 
-		const updatedPokemons = Object.entries(pokemons).reduce((acc, item) => {
+		const updatedPokemons = Object.entries(pokemonData).reduce((acc, item) => {
 			const pokemon = {...item[1]};
 			
 			if (pokemon.id === id) {
@@ -44,13 +58,27 @@ const StartPage = () => {
 			return acc;
 		}, {});
 
-		//refresh pokemons(object) with new selected pokemon
-		setPokemons(updatedPokemons);
+		//refresh STATE with new selected pokemon
+		dispatch(setPokemonsAC(updatedPokemons));
+		//setPokemons(updatedPokemons);
 
 		if (objKey) {
-			//add to the Context(array) all selected pokemons
+			//add or remove to the STATE(array) all selected pokemons
 			const updatedPokemon = updatedPokemons[objKey];
-			pokContext.addSelectedPokemon(updatedPokemon)
+
+			if(selectedPoks.find(pok => pok.id === updatedPokemon.id)) {			
+				const index = selectedPoks.findIndex(pok => pok.id === updatedPokemon.id);
+				
+				const poksAfterUnselected = [
+					...selectedPoks.slice(0, index),
+					...selectedPoks.slice(index+1)
+				]
+				dispatch(removeUnselectedPokAC(poksAfterUnselected))
+			}
+			else {
+				dispatch(setSelectedPokAC(updatedPokemon))
+			}
+			// pokContext.addSelectedPokemon(updatedPokemon)
 		}
 	}
 
@@ -67,13 +95,13 @@ const StartPage = () => {
 				<div className={stl.btn_wrap}>
 					<button className={stl.start_btn}
 									onClick={startGameBtn}
-									disabled={pokContext.selectedPoks.length < 5}>
+									disabled={selectedPoks.length < 5}>
 						Start Game
 					</button>
 				</div>
 
 				<div className={stl.flex}>
-					{ Object.entries(pokemons).map(([key, value]) => 
+					{ Object.entries(pokemonData).map(([key, value]) => 
 						<PokemonCard key={key}
 												 className={stl.cardSize}
 												 name={value.name} 
@@ -84,7 +112,7 @@ const StartPage = () => {
 												 isActiveCard={true}
 												 isSelectedCard={value.isSelectedCard}
 												 onCardClick={() => {
-													if(pokContext.selectedPoks.length < 5 || value.isSelectedCard) {
+													if(selectedPoks.length < 5 || value.isSelectedCard) {
 														onCardClick(value.id)
 													}
 												 }} />)
