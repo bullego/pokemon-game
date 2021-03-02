@@ -143,8 +143,8 @@ export const getOpponentPoksTC = () => async (dispatch) => {
   try {
 		const res = await fetchOpponentPokemons();
 		const opponentPoks = res.data;
-    // console.log('---> data opponentPoks: ', opponentPoks);
-    dispatch(setOpponentPoksAC(opponentPoks))
+		
+		dispatch(setOpponentPoksAC(opponentPoks))
 	}
 	catch(error) {
     alert(`Get opponent pokemons ${error}`)
@@ -155,8 +155,8 @@ export const getBoardTC = () => async (dispatch) => {
   try {
 		const res = await fetchBoard();
 		const board = res.data;
-    // console.log('---> data board: ', board);
-    dispatch(setBoardAC(board))
+
+		dispatch(setBoardAC(board))
 	}
 	catch(error) {
     alert(`Get board ${error}`)
@@ -164,14 +164,13 @@ export const getBoardTC = () => async (dispatch) => {
 };
 
 export const combineCardWithBoardTC = (params) => async (dispatch) => {
-  try {
-    const res = await fetchCombineBoard(params)
-    const combineBoardData = res.data
-    // console.log('---> data board: ', combineBoardData);
-    dispatch(setCombineBoardAC(combineBoardData))
-
-    return combineBoardData
-  } catch (error) {
-    alert(`Get board ${error}`)
-  }
-}
+	try {
+		const res = await fetchCombineBoard(params);
+		const combineBoardData = res.data;
+		
+		dispatch(setCombineBoardAC(combineBoardData));
+	}
+	catch(error) {
+		alert(`Get updated board ${error}`)
+	}
+};

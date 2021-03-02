@@ -1,43 +1,35 @@
-import {useState, useEffect, useContext} from 'react';
+import {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import Layout from '../../../../components/Layout';
 import PokemonCard from '../../../../components/PokemonCard';
 import stl from './StartPage.module.css';
 import layoutBg from '../../../../assets/bg3.jpg';
 import database from '../../../../service/firebase';
-// import { PokemonContext } from '../../../../context/pokemonContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {setPokemonsAC,
 			 	setSelectedPokAC,
 				removeUnselectedPokAC,
 				clearSelectedPoksAC,
-				clearOpponentPoksAC} from '../../../../redux/pokemon-reducer';
+				clearOpponentPoksAC,
+				setIsWinnerPlayerAC} from '../../../../redux/pokemon-reducer';
 
 
 const StartPage = () => {
 	const history = useHistory();
-	// const pokContext = useContext(PokemonContext);
-	// const [pokemons, setPokemons] = useState({});
-	// console.log('pokContext StartPage: ', pokContext);
 
-	const {pokemonData, selectedPoks, opponentPokemonData} = useSelector(state => state.pokemons)
+	const {pokemonData, selectedPoks, opponentPokemonData} = useSelector(state => state.pokemons);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		//reset Context at first render
-		(selectedPoks.length > 0) && dispatch(clearSelectedPoksAC());
+		selectedPoks && (selectedPoks.length > 0) && dispatch(clearSelectedPoksAC());
 		opponentPokemonData && (opponentPokemonData.length > 0) && dispatch(clearOpponentPoksAC());
-		// (pokContext.selectedPoks.length > 0) && pokContext.clearSelectedPoksFromContext();
-		// (pokContext.opponentPoks.length > 0) && pokContext.clearOpponentPoksFromContext();
-		// pokContext.setIsWinner(false);
+		dispatch(setIsWinnerPlayerAC(false));
 		
 		//get poks from database and set to the STATE
 		database.ref('pokemons').once('value', (snapshot) => {
 			dispatch(setPokemonsAC(snapshot.val()));
-		});
-		// database.ref('pokemons').once('value', (snapshot) => {
-		// 	setPokemons(snapshot.val());
-		// });		
+		});		
 	}, []);
 
 	
@@ -60,7 +52,6 @@ const StartPage = () => {
 
 		//refresh STATE with new selected pokemon
 		dispatch(setPokemonsAC(updatedPokemons));
-		//setPokemons(updatedPokemons);
 
 		if (objKey) {
 			//add or remove to the STATE(array) all selected pokemons
@@ -78,7 +69,6 @@ const StartPage = () => {
 			else {
 				dispatch(setSelectedPokAC(updatedPokemon))
 			}
-			// pokContext.addSelectedPokemon(updatedPokemon)
 		}
 	}
 
@@ -123,14 +113,3 @@ const StartPage = () => {
 }
 
 export default StartPage;
-
-/*
-1) Загрузка страницы -> очистка контекста PokContext для возможности выбрать новых покемонов + сбор с сервера покемонов и запись их в обьект pokemons в STATE (useEffect -> database -> setPokemons( snapshot.val()) ) для дальнейшей отрисовки на экране через компонент <PokemonCard/>. pokemons - это обьект с набором пар ("ключ"(странная строка): "значение"(обьект покемона))
-
-2) Выбор игровой пятерки. Нужно отметить 5 покемонов, которыми будем сражаться. Клик на покемона - добавление его в игровую пятерку, повторный клик - удалеине из пятерки. При клике мы выбираем покемона и добавляем ему новое св-во isSelectedCard и присваиваем ему true. Т.о. имеем "старый-новый" набор покемонов (updatedPokemons), одному из которых добавлена информация о том, что он был отмечен юзером.
-Также, покемона, которого выбрал юзер, мы помещаем и в Контекст PokContext (массив выбранных покемонов selectedPoks) через метод addSelectedPokemon(updatedPokemon) для дальнейшего использования выбранных покемонов в других Компонентах.
-
-Перед игрой можно выбрать максимум 5 покемонов. За эти следит проверка pokContext.selectedPoks.length < 5 || value.isSelectedCard
-
-3) Нажатие на кнопку "Start Game" через обьект "history" хука useHistory() перекинет нас c 5-кой покемонов на игровое поле 'Board Page'. Кнопка "Start Game" активируется только после выбора 5 покемонов.
-*/
