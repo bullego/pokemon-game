@@ -1,0 +1,49 @@
+.form_login {
+	color: #000;
+}
+
+.btn_wrap {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 35px;
+	margin-bottom: 20px;
+}
+
+.submit_btn {
+	padding: 12px 32px;
+	background-color: transparent;
+	border-radius: 4px;
+	border: 1px solid rgb(118, 223, 226);
+	background-color: #01bce5;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.submit_btn:hover,
+.submit_btn:focus,
+.submit_btn:active {
+	outline: none;
+	background-color: #fff;
+	border: 1px solid #01bce5;
+	color: #01bce5;
+}
+
+.toggle_btn {
+	padding: 12px 32px;
+	background-color: transparent;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	background-color: transparent;
+	color: #000;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.toggle_btn:hover,
+.toggle_btn:focus,
+.toggle_btn:active {
+	outline: none;
+	color: #01bce5;
+	border: 1px solid #01bce5;
+}
