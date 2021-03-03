@@ -2,8 +2,9 @@ import {Link} from 'react-router-dom';
 import stl from './Navbar.module.css';
 import classnames from 'classnames';
 import logo from '../../../assets/pok_logo.svg';
+import { ReactComponent as LoginSVG } from '../../../assets/login.svg';
 
-const Navbar = ({isOpenMenu, onToggleMenu, bgActive = false}) => {
+const Navbar = ({isOpenMenu, onToggleMenu, bgActive = false, onClickLogin}) => {
 	const handleClick = () => {
 		onToggleMenu(!isOpenMenu)
 	}
@@ -16,9 +17,16 @@ const Navbar = ({isOpenMenu, onToggleMenu, bgActive = false}) => {
 					<img src={logo} alt="logo"/>
 				</Link>
 				
-				<div className={classnames(stl.menuButton, {[stl.active]: isOpenMenu})}
-					 	 onClick={handleClick}>
-					<span />
+				<div className={stl.loginAndMenu}>
+					<div className={stl.login_wrap}
+							 onClick={onClickLogin}>
+						<LoginSVG />
+					</div>
+
+					<div className={classnames(stl.menuButton, {[stl.active]: isOpenMenu})}
+							 onClick={handleClick}>
+						<span />
+					</div>
 				</div>
 			</div>
 		</nav>
